@@ -1,2 +1,2 @@
 # AC-CreativeTechnology2
-GitHub Repository for Creative Technology 1 class at Media Design Practices program at Art Center College of Design
+GitHub Repository for Spring Creative Technology class at Media Design Practices program at Art Center College of Design
