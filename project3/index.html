@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Grabber</title>
+</head>
+<body>
+    <button id="trigBTN">Get data</button>
+    <!-- LOAD P5JS LIBRARY -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
+    <!-- WRITE YOUR CODE -->
+    <script>
+        let ioURL = "https://io.adafruit.com/api/v2/ConnectedCat/feeds/testsensorfeed/data?"
+        let ioLimitQ = "limit="
+        let ioLimitN = 100
+        //let ioInclude = "include=value"
+        let ioST = "start_time="
+        let ioSTval = "2022-03-11T00:00Z"
+        let ioET = "end_time="
+        let ioETval = "2022-03-12T00:00Z"
+
+        let data
+        let slider
+        let values = []
+        let times = []
+
+        function preload(){
+            fetchData()
+        }
+
+        function setup(){
+            createCanvas(800, 800)
+            slider = createSlider(1, 100, 10, 1);
+            slider.position(20, 80);
+            slider.changed(fetchData);
+        }
+
+        function draw(){
+            
+            values.forEach((v, i) => {
+                fill(times[i].getMinutes()*10, times[i].getHours()*10,times[i].getDay())
+                circle(v-3000, v-3000, random(10, 40))
+            })
+        }
+
+        function fetchData(){
+            if(slider){
+                console.log(slider.value())
+                ioLimitN = slider.value()
+            }
+            
+            let assembledURL = ioURL+ioLimitQ+ioLimitN+"&"+ioST+ioSTval+"&"+ioET+ioETval
+            console.log(assembledURL)
+            data = loadJSON(assembledURL, dataHandler, errorHandler)
+        }
+
+        function dataHandler(APIdata){
+            values = []
+            times = []
+            APIdata.forEach((elem, i) => {
+                //console.log(elem.created_at)
+                values[i] = elem.value
+                times[i] = new Date(elem.created_at)
+                console.log(times[i].getMinutes())
+            })
+        }
+
+        function errorHandler(APIerror){
+            console.error(APIerror)
+        }
+
+    </script>
+</body>
+</html>
